@@ -43,17 +43,20 @@ func (f *Flags) ParseSourcesAndInputs(paths []string) ([]string, ast.Seq, *parse
 			// and appears to start with a from or yield operator.
 			// Otherwise, consider it a file.
 			query, set, err := parse(src, f.Includes...)
-			if err == nil {
-				if s, err := semantic.Analyze(context.Background(), query, data.NewSource(storage.NewLocalEngine(), nil), nil); err == nil {
-					if semantic.HasSource(s) {
-						return nil, query, set, false, nil
-					}
-					if semantic.StartsWithYield(s) {
-						return nil, query, set, true, nil
-					}
-				}
+			if err != nil {
+				return nil, nil, nil, false, singleArgError(src, set, err)
 			}
-			return nil, nil, nil, false, singleArgError(src, set, err)
+			s, err := semantic.Analyze(context.Background(), query, data.NewSource(storage.NewLocalEngine(), nil), nil)
+			if err != nil {
+				return nil, nil, nil, false, clierrors.Format(set, err)
+			}
+			if semantic.HasSource(s) {
+				return nil, query, set, false, nil
+			}
+			if semantic.StartsWithYield(s) {
+				return nil, query, set, true, nil
+			}
+			return nil, nil, nil, false, singleArgError(src, set, nil)
 		}
 	}
 	query, set, err := parse(src, f.Includes...)
@@ -102,6 +105,8 @@ func singleArgError(src string, set *parser.SourceSet, err error) error {
 		for _, line := range strings.Split(clierrors.Format(set, err).Error(), "\n") {
 			fmt.Fprintf(&b, "\n   %s", line)
 		}
+	} else if err == nil {
+		b.WriteString("\n - the argument is a valid Zed query but does not begin with a source (e.g., \"file input.zson\") or yield operator")
 	} else {
 		b.WriteString("\n - the argument did not parse as a valid Zed query")
 	}
