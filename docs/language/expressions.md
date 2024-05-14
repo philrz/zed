@@ -272,7 +272,7 @@ in a string the `$` character must be escaped, i.e., `\$`.
 
 ### Formatted String Literals
 
-A formatted string literal (or f-string) is a string literal prefixed with 'f'.
+A formatted string literal (or f-string) is a string literal prefixed with `f`.
 These strings may include replacement expressions which are delimited by curly
 braces
 ```
