@@ -300,6 +300,47 @@ type OverExpr struct {
 func (o *OverExpr) Pos() int { return o.KeywordPos }
 func (o *OverExpr) End() int { return o.Body.End() }
 
+type FString struct {
+	Kind     string        `json:"kind" unpack:""`
+	StartPos int           `json:"start_pos"`
+	Elems    []FStringElem `json:"elems"`
+}
+
+func (f *FString) Pos() int { return f.StartPos }
+func (f *FString) End() int {
+	if n := len(f.Elems); n > 0 {
+		return f.Elems[n-1].End() + 1
+	}
+	return f.StartPos + 3
+}
+
+type FStringElem interface {
+	FStringElem()
+	Node
+}
+
+type FStringText struct {
+	Kind    string `json:"kind" unpack:""`
+	TextPos int    `json:"text_pos"`
+	Text    string `json:"text"`
+}
+
+func (f *FStringText) Pos() int { return f.TextPos }
+func (f *FStringText) End() int { return f.TextPos + len(f.Text) }
+
+type FStringExpr struct {
+	Kind   string `json:"kind" unpack:""`
+	Lbrack int    `json:"lbrack"`
+	Expr   Expr   `json:"expr"`
+	Rbrack int    `json:"rbrack"`
+}
+
+func (f *FStringExpr) Pos() int { return f.Lbrack }
+func (f *FStringExpr) End() int { return f.Rbrack + 1 }
+
+func (*FStringText) FStringElem() {}
+func (*FStringExpr) FStringElem() {}
+
 func (*UnaryExpr) ExprAST()   {}
 func (*BinaryExpr) ExprAST()  {}
 func (*Conditional) ExprAST() {}
@@ -321,6 +362,7 @@ func (*ArrayExpr) ExprAST()  {}
 func (*SetExpr) ExprAST()    {}
 func (*MapExpr) ExprAST()    {}
 func (*OverExpr) ExprAST()   {}
+func (*FString) ExprAST()    {}
 
 type ConstDecl struct {
 	Kind       string `json:"kind" unpack:""`
