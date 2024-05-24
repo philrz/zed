@@ -315,14 +315,14 @@ func (f *FString) End() int {
 }
 
 type FStringElem interface {
-	FStringElem()
 	Node
+	FStringElem()
 }
 
 type FStringText struct {
 	Kind    string `json:"kind" unpack:""`
-	TextPos int    `json:"text_pos"`
 	Text    string `json:"text"`
+	TextPos int    `json:"text_pos"`
 }
 
 func (f *FStringText) Pos() int { return f.TextPos }
@@ -330,13 +330,13 @@ func (f *FStringText) End() int { return f.TextPos + len(f.Text) }
 
 type FStringExpr struct {
 	Kind   string `json:"kind" unpack:""`
-	Lbrack int    `json:"lbrack"`
+	Lbrace int    `json:"lbrack"`
 	Expr   Expr   `json:"expr"`
-	Rbrack int    `json:"rbrack"`
+	Rbrace int    `json:"rbrack"`
 }
 
-func (f *FStringExpr) Pos() int { return f.Lbrack }
-func (f *FStringExpr) End() int { return f.Rbrack + 1 }
+func (f *FStringExpr) Pos() int { return f.Lbrace }
+func (f *FStringExpr) End() int { return f.Rbrace + 1 }
 
 func (*FStringText) FStringElem() {}
 func (*FStringExpr) FStringElem() {}

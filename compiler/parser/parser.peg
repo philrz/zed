@@ -1291,8 +1291,8 @@ ComplexType
     }
 
 StringLiteral
-  = '"' v:DoubleQuotedChar* '"' { return newPrimitive(c, "string", joinChars(v), nil }
-  / "'" v:SingleQuotedChar* "'" { return newPrimitive(c, "string", joinChars(V), nil }
+  = '"' v:DoubleQuotedChar* '"' { return newPrimitive(c, "string", joinChars(v)), nil }
+  / "'" v:SingleQuotedChar* "'" { return newPrimitive(c, "string", joinChars(v)), nil }
 
 FString
   = "f\"" v:FStringDoubleQuotedElem* '"' {
@@ -1334,9 +1334,9 @@ FStringExpr
   = "{" __ e:Expr __ "}" {
       return &ast.FStringExpr{
         Kind: "FStringExpr",
-        Lbrack: c.pos.offset, 
+        Lbrace: c.pos.offset, 
         Expr: e.(ast.Expr),
-        Rbrack: lastPos(c, "}"),
+        Rbrace: lastPos(c, "}"),
       }, nil
     }
 

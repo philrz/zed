@@ -15238,9 +15238,9 @@ func (p *parser) callonFStringSingleQuotedChar7() (any, error) {
 func (c *current) onFStringExpr1(e any) (any, error) {
 	return &ast.FStringExpr{
 		Kind:   "FStringExpr",
-		Lbrack: c.pos.offset,
+		Lbrace: c.pos.offset,
 		Expr:   e.(ast.Expr),
-		Rbrack: lastPos(c, "}"),
+		Rbrace: lastPos(c, "}"),
 	}, nil
 
 }

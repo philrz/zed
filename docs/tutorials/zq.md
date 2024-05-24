@@ -929,7 +929,7 @@ DATE                 NUMBER TITLE
 2019-11-12T16:49:07Z PR #6  a few clarifications to the zson spec
 ...
 ```
-Note that we used [formatted string literals](../language/expressions.md#formatted-string-literals)
+Note that we used a [formatted string literal](../language/expressions.md#formatted-string-literals)
 to convert the field `number` into a string and format it with surrounding text.
 
 Instead of old PRs, we can get the latest list of PRs using the

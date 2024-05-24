@@ -208,7 +208,7 @@ func (c *canon) expr(e ast.Expr, parent string) {
 		c.flush()
 		c.write(")")
 	case *ast.FString:
-		c.write("f\"")
+		c.write(`f"`)
 		for _, elem := range e.Elems {
 			switch elem := elem.(type) {
 			case *ast.FStringExpr:
@@ -217,9 +217,11 @@ func (c *canon) expr(e ast.Expr, parent string) {
 				c.write("}")
 			case *ast.FStringText:
 				c.write(elem.Text)
+			default:
+				c.write("(unknown f-strint element %T)", elem)
 			}
 		}
-		c.write("\"")
+		c.write(`"`)
 	default:
 		c.write("(unknown expr %T)", e)
 	}
