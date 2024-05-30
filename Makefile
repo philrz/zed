@@ -1,7 +1,7 @@
 export GO111MODULE=on
 
 VERSION = $(shell git describe --tags --dirty --always)
-LDFLAGS = -s -X github.com/brimdata/zed/cli.version=$(VERSION)
+LDFLAGS = -s -X github.com/philrz/zed/cli.version=$(VERSION)
 BUILD_COMMANDS = ./cmd/zed ./cmd/zq
 
 ifeq "$(filter-out 386 arm mips mipsle, $(shell go env GOARCH))" ""
